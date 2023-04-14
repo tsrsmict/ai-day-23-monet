@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the AI-generated photo</title>
+    <title>Fake or Monet?</title>
     <link rel="stylesheet" href="tailwind-compiled-styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,18 +15,17 @@
 
 </head>
 <style>
-    .monet-pic {
+    .monet-pic .robot-pic {
         display: none;
     }
 </style>
 
-<body class="px-12 py-12 text-zinc-100 bg-zinc-900">
-    <div class="">
-        <h1 class="mb-12 font-mono text-5xl font-semibold tracking-wider text-center">Fake or Monet?</h1>
-        <p class="mb-12 font-sans text-3xl font-medium leading-relaxed tracking-wide text-center">One of these is an
+<body class="flex flex-col h-screen gap-8 px-12 py-12 overflow-hidden text-zinc-100 bg-zinc-900">
+    <div class="flex-grow">
+        <h1 class="mb-5 font-mono text-5xl font-semibold tracking-wider text-center">Fake or Monet?</h1>
+        <p class="font-sans text-2xl font-medium leading-relaxed tracking-wide text-center">One of these is an
             authentic Claude Monet painting. The other was made by an AI. <br> Can you tell which is which?</p>
     </div>
-
     <div class="grid w-full grid-cols-2 gap-12 md:px-20 xl:px-40 2xl:px-48 xl:max-h-[60vh]" id="grid-container">
         <div class="flex flex-col items-center grid-col-span-1 painting-div-container" id="real-div">
             <img src="" alt="" id="real-image" class="w-full hover:cursor-pointer">
@@ -42,9 +41,10 @@
                 id="robot-pic">
         </div>
     </div>
-    <div id="status-div" class="font-mono text-center">
-        <h3 class="hidden text-4xl text-green-500 uppercase" id="correct-heading">Correct!</h3>
-        <h3 class="hidden text-4xl text-red-500 uppercase" id="incorrect-heading">Incorrect!</h3>
+
+    <div id="status-div" class="font-mono text-center text-7xl ">
+        <h3 class="invisible text-green-500 uppercase " id="correct-heading">Correct!</h3>
+        <h3 class="invisible text-red-500 uppercase" id="incorrect-heading">Incorrect!</h3>
     </div>
 </body>
 <script>
@@ -66,22 +66,6 @@
 
     let paintingDivContainers = document.querySelectorAll(".painting-div-container");
     paintingDivContainers.forEach((paintingDivContainer) => {
-        paintingDivContainer.addEventListener("mouseover", (e) => {
-            console.log("mouse over");
-            // find the monet pic inside the div
-            if (!isInResultMode) {
-                let monetPic = paintingDivContainer.querySelector(".monet-pic");
-                monetPic.style.display = "block";
-            }
-        })
-        paintingDivContainer.addEventListener("mouseout", (e) => {
-            console.log("mouse out");
-            // find the monet pic inside the div
-            if (!isInResultMode) {
-                let monetPic = paintingDivContainer.querySelector(".monet-pic");
-                monetPic.style.display = "none";
-            }
-        })
         paintingDivContainer.addEventListener("click", (e) => {
             if (isInResultMode) {
                 return;
@@ -91,11 +75,11 @@
                 monetPic.style.display = "none";
             });
             if (e.target.id === "real-image") {
-                correctHeading.style.display = "block";
-                incorrectHeading.style.display = "none";
+                correctHeading.style.visibility = "visible";
+                incorrectHeading.style.visibility = "hidden";
             } else if (e.target.id === "ai-image") {
-                incorrectHeading.style.display = "block";
-                correctHeading.style.display = "none";
+                incorrectHeading.style.visibility = "visible";
+                correctHeading.style.visibility = "hidden";
             }
             robotPic.style.display = "block";
             correctMonetPic.style.display = "block";
@@ -106,9 +90,9 @@
                 document.querySelectorAll(".monet-pic").forEach((monetPic) => {
                     monetPic.style.display = "none";
                 });
-                correctHeading.style.display = "none";
-                incorrectHeading.style.display = "none";
-            }, 2_000);
+                correctHeading.style.visibility = "hidden";
+                incorrectHeading.style.visibility = "hidden";
+            }, 3_500);
         });
     });
 
