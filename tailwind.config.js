@@ -3,7 +3,6 @@ module.exports = {
   content: ['./*.html'],
   theme: {
     fontFamily: {
-      'serif': ['Playfair Display'],
       'mono': ['Oxanium'],
       'sans': ['Montserrat']
 

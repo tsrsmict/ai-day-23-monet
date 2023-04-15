@@ -5,122 +5,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake or Monet?</title>
-    <link rel="stylesheet" href="tailwind-compiled-styles.css">
+    <title>Fake or not?</title>
+    <script defer src="index.js"></script>
+    <link href="tailwind-compiled-styles.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
-<style>
-    .monet-pic .robot-pic {
-        display: none;
-    }
-</style>
 
-<body class="flex flex-col h-screen gap-8 px-12 py-12 overflow-hidden text-zinc-100 bg-zinc-900">
-    <div class="flex-grow">
-        <h1 class="mb-5 font-mono text-5xl font-semibold tracking-wider text-center">Fake or Monet?</h1>
-        <p class="font-sans text-2xl font-medium leading-relaxed tracking-wide text-center">One of these is an
-            authentic Claude Monet painting. The other was made by an AI. <br> Can you tell which is which?</p>
+<body class="flex flex-col h-screen pt-10 text-white bg-black">
+    <h1 class="mb-5 font-mono text-5xl font-semibold tracking-wider text-center">Fake or Monet?</h1>
+    <p class="mb-20 font-sans text-2xl font-medium leading-relaxed tracking-wide text-center">One of these is an
+        authentic Claude Monet painting. The other was made by an AI. <br> Can you tell <b>which is the real one?</b>
+    </p>
+    <div class="flex flex-row items-center gap-12 mx-auto mt-10" id="pics">
+        <!-- class="order-last" -->
+        <a onclick="window.location.href = 'correct.html'" id="correct" class="overflow-hidden w-[35vw]">
+            <img
+                id="correct_img" class="w-full hover:brightness-75" src="" loading="eager">
+            </a>
+        <a onclick="window.location.href = 'wrong.html'" id="wrong" class="overflow-hidden w-[35vw] max-h-72">
+            <img
+                id="wrong_img" class="w-full hover:brightness-75" src="" loading="eager">
+            </a>
     </div>
-    <div class="grid w-full grid-cols-2 gap-12 md:px-20 xl:px-40 2xl:px-48 xl:max-h-[60vh]" id="grid-container">
-        <div class="flex flex-col items-center grid-col-span-1 painting-div-container" id="real-div">
-            <img src="" alt="" id="real-image" class="w-full hover:cursor-pointer">
-            <img src="claude-monet.jpeg" alt="" srcset=""
-                class="relative h-60 border-2 border-white rounded-full monet-pic -top-[25%]">
-        </div>
-        <div class="flex flex-col items-center grid-col-span-1 painting-div-container" id="ai-div">
-            <img src="" alt="" id="ai-image" class="w-full hover:cursor-pointer">
-            <img src="claude-monet.jpeg" alt="" srcset=""
-                class="relative h-60 border-2 border-white rounded-full monet-pic -top-[25%]">
-            <img src="robot.png" alt="" srcset=""
-                class="relative hidden h-60 bg-white border-2 border-white rounded-full robot-pic -top-[25%]"
-                id="robot-pic">
-        </div>
-    </div>
+    <p class="w-3/4 pb-5 mx-auto mt-auto text-sm text-center">Made by Arjun Sharma based on code originally written by
+        Rohan Kapur.
+        Images from the <a href="https://www.kaggle.com/datasets/dimitreoliveira/monet-paintings-jpg-berkeley">Berkeley
+            Monet Dataset</a> and <a
+            href="https://www.kaggle.com/code/dimitreoliveira/introduction-to-cyclegan-monet-paintings/notebook">Monet
+            CycleGAN</a></p>
 
-    <div id="status-div" class="font-mono text-center text-7xl ">
-        <h3 class="invisible text-green-500 uppercase " id="correct-heading">Correct!</h3>
-        <h3 class="invisible text-red-500 uppercase" id="incorrect-heading">Incorrect!</h3>
     </div>
 </body>
-<script>
-    let isInResultMode = false;
-
-    const correctHeading = document.getElementById("correct-heading");
-    const incorrectHeading = document.getElementById("incorrect-heading");
-
-    const robotPic = document.getElementById("robot-pic");
-    const correctMonetPic = document.querySelector("#real-div .monet-pic");
-
-    let aiDiv = document.getElementById("real-div");
-    let realDiv = document.getElementById("ai-div");
-    let flexContainer = document.getElementById("grid-container");
-
-    let aiPath = "";
-    let realPath = "";
-
-
-    let paintingDivContainers = document.querySelectorAll(".painting-div-container");
-    paintingDivContainers.forEach((paintingDivContainer) => {
-        paintingDivContainer.addEventListener("click", (e) => {
-            if (isInResultMode) {
-                return;
-            }
-            isInResultMode = true;
-            document.querySelectorAll(".monet-pic").forEach((monetPic) => {
-                monetPic.style.display = "none";
-            });
-            if (e.target.id === "real-image") {
-                correctHeading.style.visibility = "visible";
-                incorrectHeading.style.visibility = "hidden";
-            } else if (e.target.id === "ai-image") {
-                incorrectHeading.style.visibility = "visible";
-                correctHeading.style.visibility = "hidden";
-            }
-            robotPic.style.display = "block";
-            correctMonetPic.style.display = "block";
-            setTimeout(() => {
-                loadRandomImages();
-                isInResultMode = false;
-                robotPic.style.display = "none";
-                document.querySelectorAll(".monet-pic").forEach((monetPic) => {
-                    monetPic.style.display = "none";
-                });
-                correctHeading.style.visibility = "hidden";
-                incorrectHeading.style.visibility = "hidden";
-            }, 3_500);
-        });
-    });
-
-
-
-
-    function loadRandomImages() {
-        aiPath = `/dataset/ai-generated/${Math.floor(Math.random() * 100)}.jpg`;
-        realPath = `/dataset/real-paintings/${Math.floor(Math.random() * 100)}.jpg`;
-        document.getElementById("ai-image").src = aiPath;
-        document.getElementById("real-image").src = realPath;
-
-        if (Math.random() > 0.5) {
-            aiDiv.style.order = 1;
-            realDiv.style.order = 2;
-            flexContainer.classList.add("grid-flow-col-dense"); // this makes the ai-div the first div visually
-            // A is for the div on the left, D is for the div on the right
-        } else {
-            aiDiv.style.order = 2;
-            realDiv.style.order = 1;
-            flexContainer.classList.remove("grid-flow-col-dense");
-        }
-    }
-
-    loadRandomImages();
-
-
-
-</script>
 
 </html>
