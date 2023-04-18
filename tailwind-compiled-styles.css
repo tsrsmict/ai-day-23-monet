@@ -557,6 +557,10 @@ video {
   height: 100vh;
 }
 
+.h-72 {
+  height: 18rem;
+}
+
 .max-h-72 {
   max-height: 18rem;
 }
